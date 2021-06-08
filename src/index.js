@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
     const browseDiv = document.querySelector("#browse-nonprofits")
-    const detailedInfoDiv = document.querySelector("#detailed-info")
     const nameElement = document.querySelector("#name")
     const imageElement = document.querySelector("#image")
     const descriptionElement = document.querySelector("#description")
@@ -24,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
             data.forEach(nonprofit => {
                 const span = document.createElement("span")
                 span.innerHTML = nonprofit.name
+                span.id = nonprofit.id
                 browseDiv.append(span)
 
                 /*
@@ -35,12 +35,16 @@ document.addEventListener("DOMContentLoaded", () => {
                         description p gets description
                         span on h4 gets the donations
                 */
-                span.addEventListener("click", () => {
-                    nameElement.innerHTML = nonprofit.name
-                    imageElement.src = nonprofit.image
-                    descriptionElement.innerHTML = nonprofit.description
-                    donationsElement.innerHTML = nonprofit.donations
-                    nonprofitID.value = nonprofit.id
+                span.addEventListener("click", (event) => {
+                    fetch(`${url}/${event.target.id}`)
+                        .then(resp => resp.json())
+                        .then(nonprofit => {
+                            nameElement.innerHTML = nonprofit.name
+                            imageElement.src = nonprofit.image
+                            descriptionElement.innerHTML = nonprofit.description
+                            donationsElement.innerHTML = nonprofit.donations
+                            nonprofitID.value = nonprofit.id
+                        })
                 })
             })
         })
